@@ -99,7 +99,9 @@ export async function imageOptimizer(
   }
 
   const { headers } = req;
-  const { url, w, q } = parsedUrl.query;
+  const { w, q } = parsedUrl.query;
+  let url = parsedUrl.query.url;
+
   const mimeType = getSupportedMimeType(MODERN_TYPES, headers.accept);
   let href: string;
 
@@ -111,6 +113,10 @@ export async function imageOptimizer(
     res.statusCode = 400;
     res.end('"url" parameter cannot be an array');
     return { finished: true };
+  }
+
+  if (url.startsWith(basePath)) {
+    url = url.slice(basePath.length);
   }
 
   let isAbsolute: boolean;
